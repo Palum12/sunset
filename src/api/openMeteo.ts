@@ -1,4 +1,4 @@
-import { LocationResult, SunDay } from '../types';
+﻿import { LocationResult, SunDay } from '../types';
 
 const GEOCODE_URL = 'https://geocoding-api.open-meteo.com/v1/search';
 const FORECAST_URL = 'https://api.open-meteo.com/v1/forecast';
@@ -18,13 +18,13 @@ export async function geocodeLocation(query: string): Promise<LocationResult> {
   const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error('Błąd geokodowania lokalizacji.');
+    throw new Error('Blad geokodowania lokalizacji.');
   }
 
   const data = await response.json();
 
   if (!data.results?.length) {
-    throw new Error('Nie znaleziono takiej miejscowości.');
+    throw new Error('Nie znaleziono takiej miejscowosci.');
   }
 
   const [best] = data.results;
@@ -64,7 +64,7 @@ export async function fetchSunCalendar(
   const response = await fetch(`${FORECAST_URL}?${searchParams.toString()}`);
 
   if (!response.ok) {
-    throw new Error('Nie udało się pobrać godzin wschodu i zachodu słońca.');
+    throw new Error('Nie udalo sie pobrac godzin wschodu i zachodu slonca.');
   }
 
   const data = await response.json();
@@ -88,3 +88,4 @@ export async function fetchSunCalendar(
     };
   });
 }
+

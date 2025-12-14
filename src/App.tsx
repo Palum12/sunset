@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { fetchSunCalendar, geocodeLocation } from './api/openMeteo';
 import { LocationResult, SunDay } from './types';
 import './App.css';
@@ -46,15 +47,16 @@ const minutesToLabel = (minutes: number) => {
   return `${hours} h ${mins.toString().padStart(2, '0')} min`;
 };
 
-const isToday = (date: string, timeZone: string) => {
+const getCurrentDateInZone = (timeZone: string) => {
   const now = new Date(
     new Date().toLocaleString('en-US', {
       timeZone,
     }),
   );
-  const localDate = now.toISOString().split('T')[0];
-  return localDate === date;
+  return now.toISOString().split('T')[0];
 };
+
+const isToday = (date: string, timeZone: string) => getCurrentDateInZone(timeZone) === date;
 
 const isDaylightNow = (day: SunDay, timeZone: string) => {
   const now = new Date(
@@ -72,6 +74,7 @@ const isDaylightNow = (day: SunDay, timeZone: string) => {
 };
 
 function App() {
+  const { t } = useTranslation();
   const [query, setQuery] = useState(DEFAULT_CITY);
   const [location, setLocation] = useState<LocationResult | null>(null);
   const [days, setDays] = useState<SunDay[]>([]);
@@ -83,6 +86,21 @@ function App() {
     return days.find((day) => isToday(day.date, location.timezone)) ?? null;
   }, [days, location]);
 
+  const currentDateInZone = useMemo(
+    () => (location ? getCurrentDateInZone(location.timezone) : null),
+    [location],
+  );
+
+  const pastDays = useMemo(() => {
+    if (!location || !currentDateInZone) return [];
+    return days.filter((day) => day.date < currentDateInZone);
+  }, [currentDateInZone, days, location]);
+
+  const upcomingDays = useMemo(() => {
+    if (!location || !currentDateInZone) return [];
+    return days.filter((day) => day.date >= currentDateInZone);
+  }, [currentDateInZone, days, location]);
+
   const loadLocation = async (name: string) => {
     setLoading(true);
     setError(null);
@@ -93,15 +111,11 @@ function App() {
       setDays(calendar);
     } catch (err) {
       console.error(err);
-      setError(err instanceof Error ? err.message : 'Wystąpił nieznany błąd.');
+      setError(err instanceof Error ? err.message : t('errors.unknown'));
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    loadLocation(DEFAULT_CITY);
-  }, []);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -110,64 +124,72 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    loadLocation(DEFAULT_CITY);
+  }, []);
+
   return (
     <div className="app-shell">
       <div className="animated-sky" aria-hidden />
       <main className="panel">
         <header className="header">
           <div>
-            <p className="eyebrow">Wschody i zachody słońca</p>
-            <h1>Twoja codzienna złota godzina</h1>
-            <p className="lede">
-              Sprawdź kiedy robi się jasno i ciemno w dowolnym mieście, przewiń wstecz lub do przodu
-              aby zobaczyć pełny kalendarz.
-            </p>
+            <p className="eyebrow">{t('hero.eyebrow')}</p>
+            <h1>{t('hero.title')}</h1>
+            <p className="lede">{t('hero.lede')}</p>
           </div>
-          <form className="search" onSubmit={handleSubmit}>
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Wpisz miejscowość, np. Wrocław"
-              aria-label="Wybierz miejscowość"
-            />
-            <button type="submit" disabled={loading}>
-              {loading ? 'Ładowanie…' : 'Szukaj'}
-            </button>
-          </form>
+          <div className="header-actions">
+            <form className="search" onSubmit={handleSubmit}>
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t('search.placeholder')}
+                aria-label={t('search.aria')}
+              />
+              <button type="submit" disabled={loading}>
+                {loading ? t('search.loading') : t('search.cta')}
+              </button>
+            </form>
+          </div>
         </header>
 
         {error && <div className="banner error">{error}</div>}
         {location && !error && (
           <div className="banner success">
-            Pokazuję lokalne godziny dla <strong>{location.name}</strong>
-            {location.country ? `, ${location.country}` : ''} (strefa {location.timezone}).
+            {t('banner.success', {
+              name: location.name,
+              country: location.country ? `, ${location.country}` : '',
+              timezone: location.timezone,
+            })}
           </div>
         )}
 
         {todayCard && location && (
           <section className="today">
             <div>
-              <p className="eyebrow">Dziś</p>
+              <p className="eyebrow">{t('today.label')}</p>
               <h2>{formatDate(todayCard.date, location.timezone)}</h2>
               <p className="lede">
-                Teraz jest {isDaylightNow(todayCard, location.timezone) ? 'jasno' : 'ciemno'} – dzień trwa
-                {` ${minutesToLabel(todayCard.dayLengthMinutes)}`}.
+                {t('today.meta', {
+                  light: isDaylightNow(todayCard, location.timezone) ? t('today.daylight') : t('today.night'),
+                  length: minutesToLabel(todayCard.dayLengthMinutes),
+                })}
               </p>
               <div className="today-grid">
                 <div className="stat">
-                  <p>Wschód</p>
+                  <p>{t('stats.sunrise')}</p>
                   <strong>{formatTime(todayCard.sunrise, location.timezone)}</strong>
                 </div>
                 <div className="stat">
-                  <p>Zachód</p>
+                  <p>{t('stats.sunset')}</p>
                   <strong>{formatTime(todayCard.sunset, location.timezone)}</strong>
                 </div>
                 <div className="stat">
-                  <p>Długość dnia</p>
+                  <p>{t('stats.dayLength')}</p>
                   <strong>{minutesToLabel(todayCard.dayLengthMinutes)}</strong>
                 </div>
                 <div className="stat">
-                  <p>Długość nocy</p>
+                  <p>{t('stats.nightLength')}</p>
                   <strong>{minutesToLabel(todayCard.nightLengthMinutes)}</strong>
                 </div>
               </div>
@@ -178,29 +200,62 @@ function App() {
         <section>
           <div className="section-head">
             <div>
-              <p className="eyebrow">Historia i prognoza</p>
-              <h3>Przewiń dni w tył i w przód</h3>
-              <p className="lede">Zakres obejmuje do {PAST_DAYS} dni wstecz i {FUTURE_DAYS} dni do przodu.</p>
+              <p className="eyebrow">{t('days.title')}</p>
+              <h3>{t('days.subtitle')}</h3>
+              <p className="lede">{t('days.range', { past: PAST_DAYS, future: FUTURE_DAYS })}</p>
             </div>
           </div>
           <div className="days">
-            {loading && <div className="muted">Wczytywanie danych…</div>}
-            {!loading && location && (
-              <div className="cards" aria-live="polite">
-                {days.map((day) => (
-                  <article key={day.date} className={`card ${isToday(day.date, location.timezone) ? 'today-card' : ''}`}>
-                    <p className="eyebrow">{formatDate(day.date, location.timezone)}</p>
-                    <h4>
-                      {formatTime(day.sunrise, location.timezone)} → {formatTime(day.sunset, location.timezone)}
-                    </h4>
-                    <p className="muted">Czas jasno: {minutesToLabel(day.dayLengthMinutes)}</p>
-                    <p className="muted">Czas ciemno: {minutesToLabel(day.nightLengthMinutes)}</p>
-                    {isToday(day.date, location.timezone) && (
-                      <span className="pill">Dzisiaj</span>
-                    )}
-                  </article>
-                ))}
-              </div>
+            {loading && <div className="muted">{t('loading.data')}</div>}
+            {!loading && location && currentDateInZone && (
+              <>
+                <div className="days-row">
+                  <div className="row-head">
+                    <p className="eyebrow">{t('days.pastTitle')}</p>
+                    <span className="muted">{t('days.pastHint')}</span>
+                  </div>
+                  <div className="cards" aria-live="polite">
+                    {pastDays.length === 0 && <div className="muted">{t('days.noPast')}</div>}
+                    {pastDays.map((day) => (
+                      <article key={day.date} className="card">
+                        <p className="eyebrow">{formatDate(day.date, location.timezone)}</p>
+                        <h4>
+                          {formatTime(day.sunrise, location.timezone)} — {formatTime(day.sunset, location.timezone)}
+                        </h4>
+                        <p className="muted">{t('cards.daylight', { value: minutesToLabel(day.dayLengthMinutes) })}</p>
+                        <p className="muted">{t('cards.night', { value: minutesToLabel(day.nightLengthMinutes) })}</p>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="days-row">
+                  <div className="row-head">
+                    <p className="eyebrow">{t('days.futureTitle')}</p>
+                    <span className="muted">{t('days.futureHint')}</span>
+                  </div>
+                  <div className="cards" aria-live="polite">
+                    {upcomingDays.map((day) => (
+                      <article
+                        key={day.date}
+                        className={`card ${isToday(day.date, location.timezone) ? 'today-card' : ''}`}
+                      >
+                        <p className="eyebrow">{formatDate(day.date, location.timezone)}</p>
+                        <h4>
+                          {formatTime(day.sunrise, location.timezone)} — {formatTime(day.sunset, location.timezone)}
+                        </h4>
+                        <p className="muted">
+                          {t('cards.daylight', { value: minutesToLabel(day.dayLengthMinutes) })}
+                        </p>
+                        <p className="muted">
+                          {t('cards.night', { value: minutesToLabel(day.nightLengthMinutes) })}
+                        </p>
+                        {isToday(day.date, location.timezone) && <span className="pill">{t('today.badge')}</span>}
+                      </article>
+                    ))}
+                  </div>
+                </div>
+              </>
             )}
           </div>
         </section>
