@@ -1,0 +1,49 @@
+{
+  "hero": {
+    "eyebrow": "Wschody i zachody słońca",
+    "title": "Twoja codzienna złota godzina",
+    "lede": "Sprawdź kiedy robi się jasno i ciemno w dowolnym mieście, przewiń wstecz lub do przodu aby zobaczyć pełny kalendarz."
+  },
+  "search": {
+    "placeholder": "Wpisz miejscowość, np. Wrocław",
+    "aria": "Wybierz miejscowość",
+    "cta": "Szukaj",
+    "loading": "Ładowanie..."
+  },
+  "banner": {
+    "success": "Pokazuję lokalne godziny dla {{name}}{{country}} (strefa {{timezone}})."
+  },
+  "today": {
+    "label": "Dziś",
+    "badge": "Dzisiaj",
+    "daylight": "jasno",
+    "night": "ciemno",
+    "meta": "Teraz jest {{light}} — dzień trwa {{length}}."
+  },
+  "stats": {
+    "sunrise": "Wschód",
+    "sunset": "Zachód",
+    "dayLength": "Długość dnia",
+    "nightLength": "Długość nocy"
+  },
+  "days": {
+    "title": "Historia i prognoza",
+    "subtitle": "Przewiń dni w tył i w przód",
+    "range": "Zakres obejmuje do {{past}} dni wstecz i {{future}} dni do przodu.",
+    "pastTitle": "Dni wstecz",
+    "pastHint": "Historia lokalnych wschodów i zachodów",
+    "futureTitle": "Dni do przodu",
+    "futureHint": "Dzisiejszy dzień plus prognoza do przodu",
+    "noPast": "Brak starszych danych w tym zakresie."
+  },
+  "cards": {
+    "daylight": "Czas jasno: {{value}}",
+    "night": "Czas ciemno: {{value}}"
+  },
+  "loading": {
+    "data": "Wczytywanie danych..."
+  },
+  "errors": {
+    "unknown": "Wystąpił nieznany błąd."
+  }
+}

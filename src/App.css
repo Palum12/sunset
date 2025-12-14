@@ -1,4 +1,4 @@
-.app-shell {
+﻿.app-shell {
   position: relative;
   min-height: 100vh;
   overflow: hidden;
@@ -8,23 +8,23 @@
 .animated-sky {
   position: fixed;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255, 214, 164, 0.32), rgba(86, 144, 255, 0.16)),
-    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.08), transparent 30%),
-    radial-gradient(circle at 70% 10%, rgba(255, 149, 129, 0.12), transparent 25%),
-    linear-gradient(180deg, #0c1024 0%, #0b122b 40%, #070c1e 100%);
-  background-size: 200% 200%;
-  animation: skyMove 16s ease-in-out infinite alternate;
-  filter: saturate(1.2);
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(4, 9, 20, 0.18) 0%, rgba(4, 9, 20, 0.12) 55%, rgba(4, 9, 20, 0.4) 100%),
+    url('./assets/wallpaper.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: saturate(1.08) brightness(1.12);
   z-index: 0;
+  pointer-events: none;
 }
 
-@keyframes skyMove {
-  from {
-    background-position: 0% 40%;
-  }
-  to {
-    background-position: 100% 60%;
-  }
+.animated-sky::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(4, 9, 20, 0.35) 55%, rgba(4, 9, 20, 0.65) 100%);
 }
 
 .panel {
@@ -33,6 +33,10 @@
   max-width: 1100px;
   margin: 0 auto;
   padding: 48px 24px 64px;
+  background: linear-gradient(180deg, rgba(6, 10, 24, 0.78), rgba(6, 10, 24, 0.82));
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 25px 55px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(10px);
 }
 
 .header {
@@ -41,6 +45,13 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
+}
+
+.header-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
 }
 
 h1 {
@@ -79,8 +90,8 @@ h4 {
 
 .search {
   display: flex;
-  gap: 8px;
-  width: 320px;
+  gap: 12px;
+  width: min(480px, 100%);
 }
 
 .search input {
@@ -90,17 +101,27 @@ h4 {
   padding: 12px 14px;
   background: rgba(255, 255, 255, 0.04);
   color: #f7f9ff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .search button {
-  padding: 12px 16px;
+  padding: 12px 22px;
+  min-width: 130px;
   border-radius: 12px;
   border: none;
   background: linear-gradient(120deg, #ffb659, #ff6f91);
   color: #0b0f23;
   font-weight: 700;
+  white-space: nowrap;
+  font-size: 1rem;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.search input:focus {
+  outline: none;
+  border-color: rgba(255, 182, 89, 0.8);
+  box-shadow: 0 0 0 3px rgba(255, 182, 89, 0.18);
 }
 
 .search button:hover {
@@ -138,6 +159,7 @@ h4 {
   border-radius: 18px;
   background: linear-gradient(135deg, rgba(255, 182, 89, 0.16), rgba(98, 154, 255, 0.12));
   border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
 }
 
 .today-grid {
@@ -170,6 +192,22 @@ h4 {
 
 .days {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.days-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.row-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
 }
 
 .cards {
@@ -178,7 +216,7 @@ h4 {
   grid-auto-columns: minmax(240px, 1fr);
   gap: 12px;
   overflow-x: auto;
-  padding-bottom: 8px;
+  padding: 6px 0 12px;
   scroll-snap-type: x mandatory;
 }
 
@@ -209,21 +247,28 @@ h4 {
 
 .pill {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: auto;
+  bottom: 10px;
+  right: 10px;
   background: rgba(255, 182, 89, 0.16);
   border: 1px solid rgba(255, 182, 89, 0.6);
   color: #ffd8a6;
-  padding: 6px 10px;
+  padding: 6px 12px;
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 700;
+  box-shadow: 0 0 0 6px rgba(8, 12, 28, 0.82);
 }
 
 @media (max-width: 720px) {
   .header {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .header-actions {
+    width: 100%;
+    align-items: stretch;
   }
 
   .search {
