@@ -30,7 +30,11 @@
     "golden": "Złote godziny (rano / wieczór)",
     "blue": "Niebieskie godziny (rano / wieczór)",
     "goldenShort": "Złota godz.",
-    "blueShort": "Niebieska godz."
+    "blueShort": "Niebieska godz.",
+    "tooltipLabel": "Pokaz godziny dla zdjec",
+    "tooltipTitle": "Okna fotograficzne",
+    "morning": "Rano",
+    "evening": "Wieczor"
   },
   "days": {
     "title": "Historia i prognoza",

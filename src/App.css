@@ -166,6 +166,17 @@ h4 {
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
 }
 
+.today-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.today-head > div {
+  flex: 1;
+}
+
 .today-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -184,10 +195,6 @@ h4 {
   display: block;
   font-size: 1.4rem;
   margin-top: 4px;
-}
-
-.stat.photography strong {
-  font-size: 1.1rem;
 }
 
 .section-head {
@@ -244,6 +251,18 @@ h4 {
   box-shadow: 0 20px 45px rgba(255, 182, 89, 0.2);
 }
 
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.card-top .photo-tooltip {
+  flex-shrink: 0;
+}
+
 .card h4 {
   margin: 4px 0 8px;
 }
@@ -280,10 +299,103 @@ h4 {
   background: rgba(255, 126, 126, 0.16);
 }
 
-.photography-row {
+.photo-tooltip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.icon-button {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.25);
+  color: #ffd8a6;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.icon-button:hover,
+.icon-button:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(255, 182, 89, 0.7);
+  background: rgba(255, 182, 89, 0.14);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+  outline: none;
+}
+
+.icon-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.tooltip-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 230px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(5, 9, 22, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 999;
+}
+
+.photo-tooltip.is-open .tooltip-panel {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.tooltip-title {
+  margin: 0 0 6px;
+  font-weight: 700;
+  color: #f7f9ff;
+}
+
+.tooltip-row {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
+  margin-top: 6px;
+  align-items: flex-start;
+}
+
+.tooltip-label {
+  color: #ffd8a6;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tooltip-times {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: right;
+  font-weight: 700;
+  color: #f7f9ff;
+}
+
+.tooltip-meta {
+  display: inline-block;
+  margin-right: 8px;
+  color: #c9d3f5;
+  font-weight: 600;
+}
+
+.tooltip-muted {
+  color: #a6b2d7;
+  font-weight: 600;
 }
 
 .comparison {
@@ -321,5 +433,10 @@ h4 {
 
   .cards {
     grid-auto-columns: minmax(200px, 1fr);
+  }
+
+  .today-head {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
