@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// Default to a relative base so assets resolve both on GitHub Pages and custom domains.
-const basePath = process.env.BASE_PATH ?? './';
+// Use repo-relative base so bundled assets resolve on GitHub Pages under /sunset/.
+const basePath = process.env.BASE_PATH ?? '/sunset/';
 
 export default defineConfig(() => ({
   plugins: [react()],
