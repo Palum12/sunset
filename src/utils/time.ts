@@ -50,7 +50,7 @@ const shiftTime = (dateTime: string, offsetMinutes: number, timeZone: string) =>
 };
 
 export const formatRange = (start: string, end: string, timeZone: string) =>
-  `${formatTime(start, timeZone)} — ${formatTime(end, timeZone)}`;
+  `${formatTime(start, timeZone)} - ${formatTime(end, timeZone)}`;
 
 export const formatDualWindow = (
   firstStart: string,

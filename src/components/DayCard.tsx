@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { SunDay } from '../types';
-import { formatDate, formatDualWindow, formatTime, getPhotoWindows, minutesToLabel } from '../utils/time';
+import { formatDate, formatRange, getPhotoWindows, minutesToLabel } from '../utils/time';
+import PhotoTooltip from './PhotoTooltip';
 
 interface DayCardProps {
   day: SunDay;
@@ -14,36 +15,25 @@ const DayCard = ({ day, timeZone, highlight = false }: DayCardProps) => {
 
   return (
     <article className={`card ${highlight ? 'today-card' : ''}`}>
-      <p className="eyebrow">{formatDate(day.date, timeZone)}</p>
-      <h4>
-        {formatTime(day.sunrise, timeZone)} — {formatTime(day.sunset, timeZone)}
-      </h4>
+      <div className="card-top">
+        <div>
+          <p className="eyebrow">{formatDate(day.date, timeZone)}</p>
+          <h4>{formatRange(day.sunrise, day.sunset, timeZone)}</h4>
+        </div>
+        <PhotoTooltip
+          ariaLabel={t('photo.tooltipLabel')}
+          title={t('photo.tooltipTitle')}
+          goldenLabel={t('photo.goldenShort')}
+          blueLabel={t('photo.blueShort')}
+          morningLabel={t('photo.morning')}
+          eveningLabel={t('photo.evening')}
+          photoWindows={photoWindows}
+          timeZone={timeZone}
+          align="right"
+        />
+      </div>
       <p className="muted">{t('cards.daylight', { value: minutesToLabel(day.dayLengthMinutes) })}</p>
       <p className="muted">{t('cards.night', { value: minutesToLabel(day.nightLengthMinutes) })}</p>
-      <p className="muted photography-row">
-        <span>{t('photo.goldenShort')}</span>
-        <span>
-          {formatDualWindow(
-            photoWindows.morningGolden.start,
-            photoWindows.morningGolden.end,
-            photoWindows.eveningGolden.start,
-            photoWindows.eveningGolden.end,
-            timeZone,
-          )}
-        </span>
-      </p>
-      <p className="muted photography-row">
-        <span>{t('photo.blueShort')}</span>
-        <span>
-          {formatDualWindow(
-            photoWindows.morningBlue.start,
-            photoWindows.morningBlue.end,
-            photoWindows.eveningBlue.start,
-            photoWindows.eveningBlue.end,
-            timeZone,
-          )}
-        </span>
-      </p>
       {highlight && <span className="pill">{t('today.badge')}</span>}
     </article>
   );
