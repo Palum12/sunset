@@ -26,6 +26,12 @@
     "dayLength": "Długość dnia",
     "nightLength": "Długość nocy"
   },
+  "photo": {
+    "golden": "Złote godziny (rano / wieczór)",
+    "blue": "Niebieskie godziny (rano / wieczór)",
+    "goldenShort": "Złota godz.",
+    "blueShort": "Niebieska godz."
+  },
   "days": {
     "title": "Historia i prognoza",
     "subtitle": "Przewiń dni w tył i w przód",
@@ -42,6 +48,21 @@
   },
   "loading": {
     "data": "Wczytywanie danych..."
+  },
+  "compare": {
+    "title": "Porównanie długości dnia",
+    "subtitle": "Sprawdź różnice między dwiema lokalizacjami",
+    "hint": "Wpisz drugą miejscowość, aby zobaczyć, gdzie dzień jest dłuższy lub krótszy.",
+    "placeholder": "Dodaj miasto do porównania",
+    "aria": "Wybierz miejscowość do porównania",
+    "cta": "Porównaj",
+    "banner": "Porównuję {{base}} z lokalizacją {{other}}.",
+    "empty": "Dodaj drugą lokalizację, aby zobaczyć różnice w długości dnia.",
+    "delta": "Różnica: {{value}}",
+    "base": "Długość dnia w {{name}}: {{value}}",
+    "other": "Długość dnia w {{name}}: {{value}}",
+    "longer": "Dłuższy dzień",
+    "shorter": "Krótszy dzień"
   },
   "errors": {
     "unknown": "Wystąpił nieznany błąd."
