@@ -18,8 +18,8 @@ Aplikacja React (Vite) pokazujaca godziny wschodu i zachodu slonca dla wskazanej
 
 ## Deploy na GitHub Pages
 
-- `base` w `vite.config.ts` domyslnie jest relative (`./`), dzieki czemu assety dzialaja na Pages i na custom domenie. Jesli potrzebujesz innej sciezki, ustaw zmienna `BASE_PATH`.
-- Workflow `.github/workflows/deploy.yml` buduje projekt (`npm run build`) i publikuje artefakt Pages. Upewnij sie, ze jako zrodlo GitHub Pages wybrano **GitHub Actions**; deploy uruchamia sie automatycznie po pushu do `main`.
+- `base` w `vite.config.ts` domyslnie celuje w repo (`/sunset/`), co odpowiada adresowi `https://<uzytkownik>.github.io/sunset/`. Jesli potrzebujesz innej sciezki (np. custom domena), ustaw zmienna `BASE_PATH`.
+- Workflow `.github/workflows/deploy.yml` buduje projekt (`npm run build`) i publikuje artefakt Pages. Upewnij sie, ze jako zrodlo GitHub Pages wybrano **GitHub Actions** (nie branch root/docs); deploy uruchamia sie automatycznie po pushu do `main`.
 
 ## Stack
 
