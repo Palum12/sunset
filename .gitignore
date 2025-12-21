@@ -1,6 +1,7 @@
 node_modules
 .DS_Store
 dist
+.vite
 *.local
 .env.local
 npm-debug.log*
