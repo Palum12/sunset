@@ -9,7 +9,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "types": ["react-native", "jest"],
+    "types": ["jest"],
     "target": "ESNext"
   },
   "include": ["./src", "./index.js"]
