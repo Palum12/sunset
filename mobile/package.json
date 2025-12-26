@@ -1,0 +1,27 @@
+{
+  "name": "sunset-mobile",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "expo start --clear",
+    "android": "expo start --android",
+    "lint": "expo lint",
+    "android:prebuild": "expo prebuild --platform android --no-install",
+    "android:build-apk": "npm run android:prebuild && cd android && ./gradlew assembleDebug"
+  },
+  "dependencies": {
+    "expo": "~52.0.4",
+    "expo-status-bar": "~1.12.1",
+    "i18next": "^23.11.5",
+    "react": "18.3.1",
+    "react-i18next": "^15.5.2",
+    "react-native": "0.76.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@types/react": "~18.3.12",
+    "@types/react-native": "~0.76.0",
+    "typescript": "^5.6.3"
+  }
+}

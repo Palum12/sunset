@@ -69,6 +69,22 @@
     "shorter": "Krótszy dzień"
   },
   "errors": {
-    "unknown": "Wystąpił nieznany błąd."
+    "unknown": "Wystąpił nieznany błąd.",
+    "geocodeFailed": "Nie udało się pobrać współrzędnych dla podanej miejscowości.",
+    "geocodeEmpty": "Nie znaleziono takiej miejscowości.",
+    "calendarFailed": "Nie udało się pobrać kalendarza wschodów i zachodów.",
+    "missingCalendarData": "Brakuje danych dziennych w odpowiedzi API."
+  },
+  "mobile": {
+    "title": "Dane o słońcu w Twojej kieszeni",
+    "subtitle": "Szybki podgląd wschodów i zachodów w aplikacji React Native.",
+    "searchPlaceholder": "Wpisz miejscowość, np. Wrocław",
+    "searchCta": "Pobierz dane",
+    "loading": "Wczytuję dane...",
+    "summaryTitle": "Podsumowanie lokalizacji",
+    "summary": "Pokazuję godziny dla {{name}}{{country}} (strefa {{timezone}}).",
+    "todayLabel": "Dzisiejszy skrót",
+    "daylightMeta": "Dzień: {{daylight}}, noc: {{night}}.",
+    "upcomingTitle": "Nadchodzące dni"
   }
 }

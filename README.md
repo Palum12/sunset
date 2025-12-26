@@ -27,3 +27,11 @@ Aplikacja React (Vite) pokazujaca godziny wschodu i zachodu slonca dla wskazanej
 - React 18 + Vite
 - TypeScript
 - Open-Meteo Geocoding + Forecast API (bez klucza w podstawowym uzyciu)
+
+## Aplikacja mobilna (React Native)
+
+- Folder `mobile/` zawiera port aplikacji do React Native (SDK Expo 52, React Native 0.76).
+- Uruchomienie lokalne: `cd mobile && npm install && npm start` (lub `npm run android` aby odpalić emulator/urządzenie).
+- Budowa debug APK: `cd mobile && npm run android:build-apk` (komenda sama wykona `expo prebuild` i zbuduje `android/app/build/outputs/apk/debug/app-debug.apk`).
+- Android/iOS foldery generowane przez `expo prebuild` są ignorowane w repozytorium (`.gitignore`).
+- Workflow `.github/workflows/mobile-apk.yml` buduje debugowy APK na push do `main` lub na żądanie (`workflow_dispatch`) i dołącza go jako artefakt `sunset-mobile-debug-apk`.
