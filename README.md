@@ -18,8 +18,9 @@ Aplikacja React (Vite) pokazujaca godziny wschodu i zachodu slonca dla wskazanej
 
 ## Deploy na GitHub Pages
 
-- `base` w `vite.config.ts` domyslnie celuje w repo (`/sunset/`), co odpowiada adresowi `https://<uzytkownik>.github.io/sunset/`. Jesli potrzebujesz innej sciezki (np. custom domena), ustaw zmienna `BASE_PATH`.
-- Workflow `.github/workflows/deploy.yml` buduje projekt (`npm run build`) i publikuje artefakt Pages. Upewnij sie, ze jako zrodlo GitHub Pages wybrano **GitHub Actions** (nie branch root/docs); deploy uruchamia sie automatycznie po pushu do `main`.
+- `base` w `vite.config.ts` domyslnie jest relative (`./`), a workflow `.github/workflows/deploy.yml` ustawia `BASE_PATH` na `base_path` z `actions/configure-pages`, dzieki czemu build dziala dla `/<repo>/` i strony uzytkownika.
+- Jesli potrzebujesz innej sciezki (np. custom domena), ustaw zmienna `BASE_PATH` w workflow albo przy lokalnym `npm run build`.
+- Upewnij sie, ze jako zrodlo GitHub Pages wybrano **GitHub Actions**; w trybie branch root/docs serwowany jest surowy kod i pojawia sie blad MIME dla `/src/main.tsx`.
 
 ## Stack
 
