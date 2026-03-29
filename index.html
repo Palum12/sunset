@@ -8,28 +8,6 @@
   </head>
   <body>
     <div id="root"></div>
-    <script>
-      const sourceHtmlMode = '%VITE_SOURCE_HTML_MODE%';
-      const rawSourceMarker = ['%', 'VITE_SOURCE_HTML_MODE', '%'].join('');
-      const isRawSourceHtml = sourceHtmlMode === rawSourceMarker;
-      const isGitHubPagesHost =
-        window.location.hostname === 'github.io' ||
-        window.location.hostname.endsWith('.github.io');
-      const isDocsPath = /\/docs(?:\/|$)/.test(window.location.pathname);
-
-      if (isRawSourceHtml && isGitHubPagesHost && !isDocsPath) {
-        const currentUrl = new URL(window.location.href);
-
-        if (!currentUrl.pathname.endsWith('/')) {
-          currentUrl.pathname = `${currentUrl.pathname}/`;
-        }
-
-        const docsUrl = new URL('docs/', currentUrl);
-        docsUrl.search = currentUrl.search;
-        docsUrl.hash = currentUrl.hash;
-        window.location.replace(docsUrl);
-      }
-    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

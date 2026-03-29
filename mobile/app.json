@@ -12,6 +12,16 @@
       "resizeMode": "contain",
       "backgroundColor": "#f1f5f9"
     },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "1.9.25"
+          }
+        }
+      ]
+    ],
     "assetBundlePatterns": ["**/*"],
     "android": {
       "package": "com.sunset.mobile",

@@ -12,13 +12,18 @@ if (!fs.existsSync(androidDir)) {
 const isWindows = process.platform === 'win32';
 const gradleCommand = isWindows ? 'gradlew.bat' : './gradlew';
 const gradlePath = path.join(androidDir, gradleCommand);
+const gradleArgs = ['assembleDebug'];
+
+if (process.env.CI) {
+  gradleArgs.push('--stacktrace', '--warning-mode', 'all');
+}
 
 if (!fs.existsSync(gradlePath)) {
   console.error(`Gradle wrapper not found at ${gradlePath}`);
   process.exit(1);
 }
 
-const result = spawnSync(gradleCommand, ['assembleDebug'], {
+const result = spawnSync(gradleCommand, gradleArgs, {
   cwd: androidDir,
   stdio: 'inherit',
   shell: isWindows,
