@@ -2,14 +2,16 @@
 <html lang="pl">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="./vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wschody i zachody słońca</title>
+    <script type="module" crossorigin src="./assets/index-mNVLwmh7.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-IecLKhwY.css">
   </head>
   <body>
     <div id="root"></div>
     <script>
-      const sourceHtmlMode = '%VITE_SOURCE_HTML_MODE%';
+      const sourceHtmlMode = 'built';
       const rawSourceMarker = ['%', 'VITE_SOURCE_HTML_MODE', '%'].join('');
       const isRawSourceHtml = sourceHtmlMode === rawSourceMarker;
       const isGitHubPagesHost =
@@ -30,6 +32,5 @@
         window.location.replace(docsUrl);
       }
     </script>
-    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
