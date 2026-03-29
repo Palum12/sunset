@@ -6,7 +6,8 @@
   "description": "A React app showing sunrise and sunset times with scrolling days and GitHub Pages deployment.",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node scripts/build-pages-site.mjs dist",
+    "build:docs": "node scripts/build-pages-site.mjs docs",
     "preview": "vite preview"
   },
   "dependencies": {
