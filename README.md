@@ -18,9 +18,11 @@ Aplikacja React (Vite) pokazujaca godziny wschodu i zachodu slonca dla wskazanej
 
 ## Deploy na GitHub Pages
 
-- `base` w `vite.config.ts` domyslnie jest relative (`./`), a workflow `.github/workflows/deploy.yml` ustawia `BASE_PATH` na `base_path` z `actions/configure-pages`, dzieki czemu build dziala dla `/<repo>/` i strony uzytkownika.
+- `npm run build` generuje artefakt `dist/` dla workflow `.github/workflows/deploy.yml`, z `base` ustawianym przez `BASE_PATH`.
+- `npm run build:docs` odswieza skomitowany fallback w `docs/`, dzieki czemu repo nadal publikuje dzialajaca wersje nawet wtedy, gdy GitHub Pages jest omylkowo ustawiony na branch zamiast na workflow artifact.
+- Rootowy `index.html` rozpoznaje surowy plik z repo i na GitHub Pages przekierowuje do `docs/`, zamiast probowac ladowac `/src/main.tsx`.
 - Jesli potrzebujesz innej sciezki (np. custom domena), ustaw zmienna `BASE_PATH` w workflow albo przy lokalnym `npm run build`.
-- Upewnij sie, ze jako zrodlo GitHub Pages wybrano **GitHub Actions**; w trybie branch root/docs serwowany jest surowy kod i pojawia sie blad MIME dla `/src/main.tsx`.
+- Docelowo i tak ustaw jako zrodlo GitHub Pages **GitHub Actions**; fallback `docs/` ma utrzymac strone przy zyciu, ale nie zastapi normalnego pipeline'u deployu.
 
 ## Stack
 
