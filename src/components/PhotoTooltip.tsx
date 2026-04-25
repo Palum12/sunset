@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
-import { formatRange, getPhotoWindows } from '../utils/time';
-
-type PhotoWindows = ReturnType<typeof getPhotoWindows>;
+import { createPortal } from 'react-dom';
+import { PhotoWindows } from '../types';
+import { formatRange } from '../utils/time';
 
 interface PhotoTooltipProps {
   ariaLabel: string;
@@ -14,6 +14,12 @@ interface PhotoTooltipProps {
   timeZone: string;
   align?: 'left' | 'right';
   className?: string;
+}
+
+interface TooltipPosition {
+  top: number;
+  left: number;
+  placement: 'top' | 'bottom';
 }
 
 const CameraIcon = () => (
@@ -46,7 +52,11 @@ const PhotoTooltip = ({
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const tooltipRef = useRef<HTMLDivElement | null>(null);
   const [open, setOpen] = useState(false);
-  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [position, setPosition] = useState<TooltipPosition>({
+    top: 0,
+    left: 0,
+    placement: 'top',
+  });
 
   const updatePosition = useCallback(() => {
     const button = buttonRef.current;
@@ -55,21 +65,26 @@ const PhotoTooltip = ({
 
     const buttonRect = button.getBoundingClientRect();
     const tooltipRect = tooltip.getBoundingClientRect();
-    const spacing = 8;
+    const spacing = 10;
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
 
     let left = align === 'left' ? buttonRect.left : buttonRect.right - tooltipRect.width;
-    let top = buttonRect.bottom + spacing;
+    left = Math.min(Math.max(left, spacing), viewportWidth - tooltipRect.width - spacing);
 
-    if (top + tooltipRect.height > viewportHeight - spacing) {
-      top = buttonRect.top - tooltipRect.height - spacing;
+    let placement: TooltipPosition['placement'] = 'top';
+    let top = buttonRect.top - tooltipRect.height - spacing;
+
+    if (top < spacing) {
+      placement = 'bottom';
+      top = buttonRect.bottom + spacing;
     }
 
-    left = Math.min(Math.max(left, spacing), viewportWidth - tooltipRect.width - spacing);
-    top = Math.min(Math.max(top, spacing), viewportHeight - tooltipRect.height - spacing);
+    if (top + tooltipRect.height > viewportHeight - spacing) {
+      top = Math.max(spacing, viewportHeight - tooltipRect.height - spacing);
+    }
 
-    setPosition({ top, left });
+    setPosition({ top, left, placement });
   }, [align]);
 
   useLayoutEffect(() => {
@@ -79,75 +94,110 @@ const PhotoTooltip = ({
 
   useEffect(() => {
     if (!open) return;
-    const handleUpdate = () => updatePosition();
-    window.addEventListener('scroll', handleUpdate, true);
-    window.addEventListener('resize', handleUpdate);
+
+    const handleOutsidePress = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as Node | null;
+      if (buttonRef.current?.contains(target) || tooltipRef.current?.contains(target)) {
+        return;
+      }
+
+      setOpen(false);
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpen(false);
+      }
+    };
+
+    const handleViewportChange = () => updatePosition();
+
+    document.addEventListener('mousedown', handleOutsidePress);
+    document.addEventListener('touchstart', handleOutsidePress);
+    document.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('resize', handleViewportChange);
+    window.addEventListener('scroll', handleViewportChange, true);
+
     return () => {
-      window.removeEventListener('scroll', handleUpdate, true);
-      window.removeEventListener('resize', handleUpdate);
+      document.removeEventListener('mousedown', handleOutsidePress);
+      document.removeEventListener('touchstart', handleOutsidePress);
+      document.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('resize', handleViewportChange);
+      window.removeEventListener('scroll', handleViewportChange, true);
     };
   }, [open, updatePosition]);
 
-  const classes = [
-    'photo-tooltip',
-    align === 'left' ? 'align-left' : 'align-right',
-    open ? 'is-open' : null,
-    className,
-  ]
+  const classes = ['photo-tooltip', align === 'left' ? 'align-left' : 'align-right', className]
     .filter(Boolean)
     .join(' ');
 
+  const popup = open
+    ? createPortal(
+        <div className="tooltip-layer">
+          <div
+            ref={tooltipRef}
+            id={tooltipId}
+            className={`tooltip-panel tooltip-panel-${position.placement}`}
+            role="tooltip"
+            style={{ top: position.top, left: position.left }}
+          >
+            <p className="tooltip-title">{title}</p>
+
+            <section className="tooltip-section">
+              <p className="tooltip-section-title">{goldenLabel}</p>
+              <p className="tooltip-line">
+                <span className="tooltip-line-label">{morningLabel}:</span>
+                <span className="tooltip-line-value">
+                  {formatRange(photoWindows.morningGolden.start, photoWindows.morningGolden.end, timeZone)}
+                </span>
+              </p>
+              <p className="tooltip-line">
+                <span className="tooltip-line-label">{eveningLabel}:</span>
+                <span className="tooltip-line-value">
+                  {formatRange(photoWindows.eveningGolden.start, photoWindows.eveningGolden.end, timeZone)}
+                </span>
+              </p>
+            </section>
+
+            <section className="tooltip-section">
+              <p className="tooltip-section-title">{blueLabel}</p>
+              <p className="tooltip-line">
+                <span className="tooltip-line-label">{morningLabel}:</span>
+                <span className="tooltip-line-value">
+                  {formatRange(photoWindows.morningBlue.start, photoWindows.morningBlue.end, timeZone)}
+                </span>
+              </p>
+              <p className="tooltip-line">
+                <span className="tooltip-line-label">{eveningLabel}:</span>
+                <span className="tooltip-line-value">
+                  {formatRange(photoWindows.eveningBlue.start, photoWindows.eveningBlue.end, timeZone)}
+                </span>
+              </p>
+            </section>
+          </div>
+        </div>,
+        document.body,
+      )
+    : null;
+
   return (
-    <div className={classes} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
-      <button
-        ref={buttonRef}
-        type="button"
-        className="icon-button"
-        aria-label={ariaLabel}
-        title={ariaLabel}
-        aria-describedby={tooltipId}
-        onFocus={() => setOpen(true)}
-        onBlur={() => setOpen(false)}
-      >
-        <CameraIcon />
-      </button>
-      <div
-        ref={tooltipRef}
-        id={tooltipId}
-        className="tooltip-panel"
-        role="tooltip"
-        aria-hidden={!open}
-        style={{ top: position.top, left: position.left }}
-      >
-        <p className="tooltip-title">{title}</p>
-        <div className="tooltip-row">
-          <span className="tooltip-label">{goldenLabel}</span>
-          <div className="tooltip-times">
-            <span>
-              <span className="tooltip-meta">{morningLabel}</span>
-              {formatRange(photoWindows.morningGolden.start, photoWindows.morningGolden.end, timeZone)}
-            </span>
-            <span className="tooltip-muted">
-              <span className="tooltip-meta">{eveningLabel}</span>
-              {formatRange(photoWindows.eveningGolden.start, photoWindows.eveningGolden.end, timeZone)}
-            </span>
-          </div>
-        </div>
-        <div className="tooltip-row">
-          <span className="tooltip-label">{blueLabel}</span>
-          <div className="tooltip-times">
-            <span>
-              <span className="tooltip-meta">{morningLabel}</span>
-              {formatRange(photoWindows.morningBlue.start, photoWindows.morningBlue.end, timeZone)}
-            </span>
-            <span className="tooltip-muted">
-              <span className="tooltip-meta">{eveningLabel}</span>
-              {formatRange(photoWindows.eveningBlue.start, photoWindows.eveningBlue.end, timeZone)}
-            </span>
-          </div>
-        </div>
+    <>
+      <div className={classes}>
+        <button
+          ref={buttonRef}
+          type="button"
+          className={`icon-button ${open ? 'is-active' : ''}`}
+          aria-label={ariaLabel}
+          aria-describedby={open ? tooltipId : undefined}
+          aria-expanded={open}
+          aria-controls={open ? tooltipId : undefined}
+          onClick={() => setOpen((current) => !current)}
+        >
+          <CameraIcon />
+        </button>
       </div>
-    </div>
+      {popup}
+    </>
   );
 };
 

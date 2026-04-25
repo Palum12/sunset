@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
+import useMediaQuery from '../hooks/useMediaQuery';
 import { LocationResult, SunDay } from '../types';
-import DayCard from './DayCard';
-import { isToday } from '../utils/time';
+import DaysGroup from './DaysGroup';
 
 interface DaysSectionProps {
   loading: boolean;
@@ -13,6 +13,8 @@ interface DaysSectionProps {
   futureRange: number;
 }
 
+const MOBILE_BREAKPOINT = '(max-width: 720px)';
+
 const DaysSection = ({
   loading,
   location,
@@ -23,6 +25,7 @@ const DaysSection = ({
   futureRange,
 }: DaysSectionProps) => {
   const { t } = useTranslation();
+  const compactLayout = useMediaQuery(MOBILE_BREAKPOINT);
 
   return (
     <section>
@@ -37,35 +40,23 @@ const DaysSection = ({
         {loading && <div className="muted">{t('loading.data')}</div>}
         {!loading && location && currentDateInZone && (
           <>
-            <div className="days-row">
-              <div className="row-head">
-                <p className="eyebrow">{t('days.pastTitle')}</p>
-                <span className="muted">{t('days.pastHint')}</span>
-              </div>
-              <div className="cards" aria-live="polite">
-                {pastDays.length === 0 && <div className="muted">{t('days.noPast')}</div>}
-                {pastDays.map((day) => (
-                  <DayCard key={day.date} day={day} timeZone={location.timezone} />
-                ))}
-              </div>
-            </div>
+            <DaysGroup
+              title={t('days.pastTitle')}
+              hint={t('days.pastHint')}
+              days={pastDays}
+              timeZone={location.timezone}
+              emptyLabel={t('days.noPast')}
+              defaultOpen={!compactLayout}
+            />
 
-            <div className="days-row">
-              <div className="row-head">
-                <p className="eyebrow">{t('days.futureTitle')}</p>
-                <span className="muted">{t('days.futureHint')}</span>
-              </div>
-              <div className="cards" aria-live="polite">
-                {upcomingDays.map((day) => (
-                  <DayCard
-                    key={day.date}
-                    day={day}
-                    timeZone={location.timezone}
-                    highlight={isToday(day.date, location.timezone)}
-                  />
-                ))}
-              </div>
-            </div>
+            <DaysGroup
+              title={t('days.futureTitle')}
+              hint={t('days.futureHint')}
+              days={upcomingDays}
+              timeZone={location.timezone}
+              emptyLabel={t('days.noFuture')}
+              defaultOpen
+            />
           </>
         )}
       </div>
