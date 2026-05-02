@@ -13,7 +13,8 @@ These guidelines apply to the entire repository:
 - Default local URL: `http://localhost:5173`
 - Build production bundle: `npm run build`
 - Preview production build locally: `npm run preview`
-- Rebuild checked-in GitHub Pages fallback only when needed: `npm run build:docs`
+- After any web UI, routing, asset, CSS, or Vite build output change, run `npm run build:docs` and include the resulting `docs/` changes in the same PR. CI verifies this with `git diff --exit-code -- docs`.
+- The checked-in `docs/` directory is the GitHub Pages fallback. Do not leave it stale after changes that affect the generated web bundle.
 
 ## Mobile app
 

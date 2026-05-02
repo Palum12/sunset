@@ -1,0 +1,7 @@
+index.html text eol=lf
+docs/.nojekyll text eol=lf
+docs/*.html text eol=lf
+docs/*.svg text eol=lf
+docs/assets/*.css text eol=lf
+docs/assets/*.js text eol=lf
+docs/assets/*.jpg binary
