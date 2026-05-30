@@ -1,8 +1,10 @@
 import { useTranslation } from 'react-i18next';
+import useMediaQuery from '../hooks/useMediaQuery';
 import { LocationResult, SunDay } from '../types';
 import { formatDate, formatTime, isDaylightNow, minutesToLabel } from '../utils/time';
-import { getPhotoWindows } from '../utils/time';
-import PhotoTooltip from './PhotoTooltip';
+import MoonPhaseBadge from './MoonPhaseBadge';
+import PhotoWindowsSummary from './PhotoWindowsSummary';
+import SunArc from './SunArc';
 
 interface TodaySectionProps {
   location: LocationResult;
@@ -11,7 +13,7 @@ interface TodaySectionProps {
 
 const TodaySection = ({ location, todayCard }: TodaySectionProps) => {
   const { t } = useTranslation();
-  const photoWindows = getPhotoWindows(todayCard, location.timezone);
+  const compactLayout = useMediaQuery('(max-width: 720px)');
 
   return (
     <section className="today">
@@ -26,34 +28,42 @@ const TodaySection = ({ location, todayCard }: TodaySectionProps) => {
             })}
           </p>
         </div>
-        <PhotoTooltip
-          ariaLabel={t('photo.tooltipLabel')}
-          title={t('photo.tooltipTitle')}
-          goldenLabel={t('photo.goldenShort')}
-          blueLabel={t('photo.blueShort')}
-          morningLabel={t('photo.morning')}
-          eveningLabel={t('photo.evening')}
-          photoWindows={photoWindows}
-          timeZone={location.timezone}
-          align="right"
-        />
       </div>
-      <div className="today-grid">
-        <div className="stat">
-          <p>{t('stats.sunrise')}</p>
-          <strong>{formatTime(todayCard.sunrise, location.timezone)}</strong>
-        </div>
-        <div className="stat">
-          <p>{t('stats.sunset')}</p>
-          <strong>{formatTime(todayCard.sunset, location.timezone)}</strong>
-        </div>
-        <div className="stat">
-          <p>{t('stats.dayLength')}</p>
-          <strong>{minutesToLabel(todayCard.dayLengthMinutes)}</strong>
-        </div>
-        <div className="stat">
-          <p>{t('stats.nightLength')}</p>
-          <strong>{minutesToLabel(todayCard.nightLengthMinutes)}</strong>
+      <div className="today-overview">
+        <SunArc day={todayCard} timeZone={location.timezone} />
+        <div className="today-side">
+          <div className="today-grid">
+            <div className="stat">
+              <p>{t('stats.sunrise')}</p>
+              <strong>{formatTime(todayCard.sunrise, location.timezone)}</strong>
+            </div>
+            <div className="stat">
+              <p>{t('stats.sunset')}</p>
+              <strong>{formatTime(todayCard.sunset, location.timezone)}</strong>
+            </div>
+            <div className="stat">
+              <p>{t('stats.dayLength')}</p>
+              <strong>{minutesToLabel(todayCard.dayLengthMinutes)}</strong>
+            </div>
+            <div className="stat">
+              <p>{t('stats.nightLength')}</p>
+              <strong>{minutesToLabel(todayCard.nightLengthMinutes)}</strong>
+              <div className="stat-meta">
+                <span className="stat-note">{t('today.moonPhase.label')}</span>
+                <MoonPhaseBadge date={todayCard.date} />
+              </div>
+            </div>
+          </div>
+          {compactLayout ? (
+            <details className="today-disclosure">
+              <summary>{t('photo.tooltipTitle')}</summary>
+              <div className="today-disclosure-body">
+                <PhotoWindowsSummary day={todayCard} timeZone={location.timezone} />
+              </div>
+            </details>
+          ) : (
+            <PhotoWindowsSummary day={todayCard} timeZone={location.timezone} />
+          )}
         </div>
       </div>
     </section>

@@ -11,7 +11,7 @@ interface DayCardProps {
 
 const DayCard = ({ day, timeZone, highlight = false }: DayCardProps) => {
   const { t } = useTranslation();
-  const photoWindows = getPhotoWindows(day, timeZone);
+  const photoWindows = getPhotoWindows(day);
 
   return (
     <article className={`card ${highlight ? 'today-card' : ''}`}>
